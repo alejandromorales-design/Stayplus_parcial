@@ -186,13 +186,13 @@ import java.util.Scanner;
             int op = leerEntero("Nuevo estado: ");
             String nuevoEstado = null;
             if (op == 1) {
-                nuevoEstado = Habitacion.DISPONIBLE;
+                nuevoEstado = Habitacion.disponible;
             } else if (op == 2) {
-                nuevoEstado = Habitacion.RESERVADA;
+                nuevoEstado = Habitacion.reservada;
             } else if (op == 3) {
-                nuevoEstado = Habitacion.OCUPADA;
+                nuevoEstado = Habitacion.ocupada;
             } else if (op == 4) {
-                nuevoEstado = Habitacion.MANTENIMIENTO;
+                nuevoEstado = Habitacion.mantenimiento;
             }
 
             if (nuevoEstado != null) {
@@ -471,11 +471,11 @@ import java.util.Scanner;
             System.out.println("1. Individual  2. Doble  3. Suite");
             int op = leerEntero("Tipo: ");
             if (op == 2) {
-                return Habitacion.DOBLE;
+                return Habitacion.doble;
             } else if (op == 3) {
-                return Habitacion.SUITE;
+                return Habitacion.suiete;
             }
-            return Habitacion.INDIVIDUAL;
+            return Habitacion.individual;
         }
 
         private static String leerMetodoPago() {
@@ -535,9 +535,9 @@ import java.util.Scanner;
             hotel.crearHuesped(h1);
             hotel.crearHuesped(h2);
 
-            hotel.crearHabitacion(new Habitacion(101, 1, Habitacion.INDIVIDUAL, 1, 120000));
-            hotel.crearHabitacion(new Habitacion(102, 1, Habitacion.DOBLE, 2, 180000));
-            hotel.crearHabitacion(new Habitacion(201, 2, Habitacion.SUITE, 4, 350000));
+            hotel.crearHabitacion(new Habitacion(101, 1, Habitacion.individual, 1, 120000));
+            hotel.crearHabitacion(new Habitacion(102, 1, Habitacion.doble, 2, 180000));
+            hotel.crearHabitacion(new Habitacion(201, 2, Habitacion.suiete, 4, 350000));
 
             hotel.crearServicio(new ServicioAdicional("SRV01", "Restaurante", "Servicio de comidas", 45000, true));
             hotel.crearServicio(new ServicioAdicional("SRV02", "Lavanderia", "Lavado y planchado", 25000, true));
