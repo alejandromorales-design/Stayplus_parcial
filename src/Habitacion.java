@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class Habitacion {
 
 
-    public static final String INDIVIDUAL = "Individual";
-    public static final String DOBLE = "Doble";
-    public static final String SUITE = "Suite";
+    public static final String individual = "Individual";
+    public static final String doble = "Doble";
+    public static final String suiete = "Suite";
 
-    public static final String DISPONIBLE = "Disponible";
-    public static final String RESERVADA = "Reservada";
-    public static final String OCUPADA = "Ocupada";
-    public static final String MANTENIMIENTO = "Mantenimiento";
+    public static final String disponible = "Disponible";
+    public static final String reservada= "Reservada";
+    public static final String ocupada= "Ocupada";
+    public static final String mantenimiento = "Mantenimiento";
 
 
     private int numero;
@@ -29,34 +29,36 @@ public class Habitacion {
         this.tipo = tipo;
         this.capacidadMaxima = capacidadMaxima;
         this.precioPorNoche = precioPorNoche;
-        this.estado = DISPONIBLE;
+        this.estado = disponible;
     }
 
-    // Revisa si esta habitacion esta libre entre las fechas "entrada" y
-    // "salida" que alguien quiere reservar.
-    //
-    // Como lo hace:
-    // 1. Si la habitacion esta en MANTENIMIENTO, no esta disponible, punto.
-    // 2. Si no, recorre TODAS las reservas del hotel (nos las pasan como
-    //    parametro) y busca las que ya incluyen esta misma habitacion.
-    // 3. Ignora las CANCELADAS (una reserva cancelada no bloquea fechas).
-    // 4. Para las demas, revisa si el rango de fechas nuevo se cruza con el
-    //    rango de fechas de la reserva existente. Si se cruzan, no esta
-    //    disponible.
+    /**
+     * Revisa si esta habitacion esta libre entre las fechas "entrada" y
+     *  "salida" que alguien quiere reservar.
+     * Como lo hace:
+     *  1. Si la habitacion esta en MANTENIMIENTO, no esta disponible, punto.
+     *  2. Si no, recorre TODAS las reservas del hotel (nos las pasan como
+     *  parametro) y busca las que ya incluyen esta misma habitacion.
+     *  3. Ignora las CANCELADAS (una reserva cancelada no bloquea fechas).
+     *  4. Para las demas, revisa si el rango de fechas nuevo se cruza con el
+     *  rango de fechas de la reserva existente. Si se cruzan, no esta
+     *  disponible.
+     * @param entrada
+     * @param salida
+     * @param todasLasReservas
+     * @return
+     */
+
     public boolean estaDisponibleEnRango(LocalDate entrada, LocalDate salida, ArrayList<Reserva> todasLasReservas) {
-        if (estado.equals(MANTENIMIENTO)) {
+        if (estado.equals(mantenimiento)) {
             return false;
         }
-
         for (int i = 0; i < todasLasReservas.size(); i++) {
             Reserva r = todasLasReservas.get(i);
 
-            if (r.getEstado().equals(Reserva.CANCELADA)) {
+            if (r.getEstado().equals(Reserva.cancelada)) {
                 continue; // una reserva cancelada no cuenta
             }
-
-            // Revisamos si esta reserva incluye esta misma habitacion,
-            // comparando numero por numero (no usamos contains()).
             boolean laIncluye = false;
             ArrayList<Habitacion> habsDeEsaReserva = r.getHabitaciones();
             for (int j = 0; j < habsDeEsaReserva.size(); j++) {
@@ -79,10 +81,16 @@ public class Habitacion {
         return true;
     }
 
+    /**
+     * metodo  que valida si el texto recibido es uno de los 4 estados permitidos.
+     * @param estado
+     * @return
+     */
+
     // Valida si el texto recibido es uno de los 4 estados permitidos.
     public static boolean esEstadoValido(String estado) {
-        if (estado.equals(DISPONIBLE) || estado.equals(RESERVADA)
-                || estado.equals(OCUPADA) || estado.equals(MANTENIMIENTO)) {
+        if (estado.equals(disponible) || estado.equals(reservada)
+                || estado.equals(ocupada) || estado.equals(mantenimiento)) {
             return true;
         }
         return false;

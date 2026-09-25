@@ -51,15 +51,11 @@ import java.util.Scanner;
             System.out.println("0. Salir");
         }
 
-        // ========================================================================
-        // CRUD Huespedes
-        // ========================================================================
-
         private static void menuHuespedes() {
             int op = -1;
             while (op != 0) {
-                System.out.println("\n--- CRUD Huespedes ---");
-                System.out.println("1. Crear   2. Leer/Listar   3. Actualizar   4. Eliminar   0. Volver");
+                System.out.println("\n---  Huespedes ---");
+                System.out.println("1. Crear   2. Leer/Lista   3. Actualizar   4. Eliminar   0. Volver");
                 op = leerEntero("Opcion: ");
 
                 if (op == 1) {
@@ -101,7 +97,7 @@ import java.util.Scanner;
             }
         }
 
-        // UPDATE: pide el documento y los nuevos datos.
+        // pide el documento y los nuevos datos.
         private static void actualizarHuespedUI() {
             System.out.println("--- Actualizar huesped ---");
             String doc = leerTexto("Documento del huesped a actualizar: ");
@@ -129,7 +125,7 @@ import java.util.Scanner;
         }
 
         // ========================================================================
-        // CRUD Habitaciones
+        // Habitaciones
         // ========================================================================
 
         private static void menuHabitaciones() {
@@ -217,7 +213,7 @@ import java.util.Scanner;
         }
 
         // ========================================================================
-        // CRUD Servicios adicionales
+        // Servicios adicionales
         // ========================================================================
 
         private static void menuServicios() {
@@ -286,9 +282,6 @@ import java.util.Scanner;
             }
         }
 
-        // ========================================================================
-        // CRUD Reservas
-        // ========================================================================
 
         private static void menuReservas() {
             int op = -1;
@@ -311,7 +304,7 @@ import java.util.Scanner;
             }
         }
 
-        // CREATE: crea la reserva "vacia" (sin habitaciones); se completa desde Actualizar.
+        // crea la reserva "vacia" (sin habitaciones); se completa desde Actualizar.
         private static void crearReservaUI() {
             System.out.println("--- Crear reserva ---");
             if (hotel.listarHuespedes().size() == 0) {
@@ -326,8 +319,8 @@ import java.util.Scanner;
                 return;
             }
             String codigo = leerTexto("Codigo de la reserva: ");
-            LocalDate entrada = leerFecha("Fecha de entrada (yyyy-MM-dd): ");
-            LocalDate salida = leerFecha("Fecha de salida (yyyy-MM-dd): ");
+            LocalDate entrada = leerFecha("Fecha de entrada (dia-mes-año): ");
+            LocalDate salida = leerFecha("Fecha de salida (dia-mes-año): ");
             String metodoPago = leerMetodoPago();
 
             Reserva reserva = new Reserva(codigo, huesped, entrada, salida, metodoPago);
@@ -347,7 +340,7 @@ import java.util.Scanner;
             }
         }
 
-        // UPDATE: agrupa las formas de "actualizar" una reserva: agregar
+        // agrupa las formas de "actualizar" una reserva: agregar
         // habitacion, agregar servicio, confirmar o cambiar de estado.
         private static void actualizarReservaUI() {
             Reserva reserva = seleccionarReserva();
@@ -400,11 +393,11 @@ import java.util.Scanner;
                 int estadoOp = leerEntero("Nuevo estado: ");
                 String nuevo = null;
                 if (estadoOp == 1) {
-                    nuevo = Reserva.EN_CURSO;
+                    nuevo = Reserva.enCurso;
                 } else if (estadoOp == 2) {
-                    nuevo = Reserva.FINALIZADA;
+                    nuevo = Reserva.finalizada;
                 } else if (estadoOp == 3) {
-                    nuevo = Reserva.CANCELADA;
+                    nuevo = Reserva.cancelada;
                 }
                 if (nuevo != null) {
                     hotel.actualizarEstadoReserva(reserva.getCodigoReserva(), nuevo);
@@ -450,7 +443,7 @@ import java.util.Scanner;
 
         private static void consultarIngresosPorFecha() {
             System.out.println("\n--- Ingresos por fecha ---");
-            LocalDate fecha = leerFecha("Fecha de realizacion a consultar (yyyy-MM-dd): ");
+            LocalDate fecha = leerFecha("Fecha de realizacion a consultar (año-mes- dia): ");
             double total = hotel.calcularIngresosPorFecha(fecha);
             System.out.println("Ingresos por reservas realizadas el " + fecha + ": $" + (long) total + "\n");
         }
@@ -489,11 +482,11 @@ import java.util.Scanner;
             System.out.println("1. Tarjeta de credito  2. Transferencia bancaria  3. Efectivo");
             int op = leerEntero("Metodo de pago: ");
             if (op == 1) {
-                return Reserva.TARJETA_CREDITO;
+                return Reserva.tarjetaDeCredito;
             } else if (op == 2) {
-                return Reserva.TRANSFERENCIA_BANCARIA;
+                return Reserva.tranferenciaBancaria;
             }
-            return Reserva.EFECTIVO;
+            return Reserva.efectivo;
         }
 
         private static String leerTexto(String mensaje) {
@@ -529,13 +522,13 @@ import java.util.Scanner;
                     System.out.print(mensaje);
                     return LocalDate.parse(sc.nextLine().trim());
                 } catch (Exception e) {
-                    System.out.println("Formato invalido. Usa yyyy-MM-dd (ej: 2026-09-23).");
+                    System.out.println("Formato invalido. Usa dia-Mes-año (ej: 2026-09-23).");
                 }
             }
         }
 
         // Carga datos de ejemplo al iniciar el programa, para que el menu tenga
-        // informacion inmediata con la cual probar el CRUD.
+        // informacion inmediata con la cual probar
         private static void precargarDatosDeEjemplo() {
             Huesped h1 = new Huesped("Alejandro Morales", "1094123456", "6", "alejo@correo.com", "Colombia");
             Huesped h2 = new Huesped("Maria Perez", "1098765432", "28", "maria@correo.com", "Colombia");

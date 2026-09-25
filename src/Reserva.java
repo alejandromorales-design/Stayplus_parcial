@@ -6,20 +6,20 @@ import java.util.ArrayList;
 public class Reserva {
 
     // Valores validos para "estado"
-    public static final String PENDIENTE = "Pendiente";
-    public static final String CONFIRMADA = "Confirmada";
-    public static final String EN_CURSO = "En curso";
-    public static final String FINALIZADA = "Finalizada";
-    public static final String CANCELADA = "Cancelada";
+    public static final String pendiente= "Pendiente";
+    public static final String confirmada = "Confirmada";
+    public static final String enCurso = "En curso";
+    public static final String finalizada = "Finalizada";
+    public static final String cancelada= "Cancelada";
 
     // Valores validos para "metodoPago"
-    public static final String TARJETA_CREDITO = "Tarjeta de credito";
-    public static final String TRANSFERENCIA_BANCARIA = "Transferencia bancaria";
-    public static final String EFECTIVO = "Efectivo";
+    public static final String tarjetaDeCredito= "Tarjeta de credito";
+    public static final String tranferenciaBancaria = "Transferencia bancaria";
+    public static final String efectivo = "Efectivo";
 
     // Reglas de negocio como constantes con nombre.
-    private static final double DESCUENTO_HUESPED_FRECUENTE = 0.10; // 10%
-    private static final int RESERVAS_PARA_SER_FRECUENTE = 3;
+    private static final double descuentuHuespedFrecuente = 0.10; // 10%
+    private static final int reservasParaSerFrecuente = 3;
 
     //  Atributos
     private String codigoReserva;
@@ -34,9 +34,14 @@ public class Reserva {
     private ArrayList<Habitacion> habitaciones;
     private ArrayList<ServicioAdicional> serviciosUtilizados;
 
-    // crea una reserva nueva.
-    // La fecha de realizacion se toma como "hoy" automaticamente.
-    // Arranca en estado Pendiente y sin habitaciones ni servicios todavia.
+    /**
+     * metodo para crear una reserva nueva.
+     * @param codigoReserva
+     * @param huesped
+     * @param fechaEntrada
+     * @param fechaSalida
+     * @param metodoPago
+     */
     public Reserva(String codigoReserva, Huesped huesped, LocalDate fechaEntrada, LocalDate fechaSalida,
                    String metodoPago) {
         this.codigoReserva = codigoReserva;
@@ -45,15 +50,17 @@ public class Reserva {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.metodoPago = metodoPago;
-        this.estado = PENDIENTE;
+        this.estado = pendiente;
         this.habitaciones = new ArrayList<Habitacion>();
         this.serviciosUtilizados = new ArrayList<ServicioAdicional>();
         this.valorTotal = 0.0;
     }
 
-    // Calcula cuantas noches dura la estadia. toEpochDay() convierte cada
-    // fecha en un numero de dias, y restando obtenemos la diferencia.
-    // Se deja minimo en 1 noche para evitar reservas de 0 noches.
+    /**
+     * metodo para Calcula cuantas noches dura la estadia.
+     * @return
+     */
+
     public long getNoches() {
         long noches = fechaSalida.toEpochDay() - fechaEntrada.toEpochDay();
         if (noches < 1) {
@@ -62,8 +69,13 @@ public class Reserva {
         return noches;
     }
 
-    // Agrega una habitacion a esta reserva.
-    // Primero se valida disponibilidad y solo si esta libre, se agrega.
+    /**
+     * metodo para Agrega una habitacion a esta reserva.
+     * @param habitacion
+     * @param todasLasReservas
+     * @return
+     */
+
     public boolean agregarHabitacion(Habitacion habitacion, ArrayList<Reserva> todasLasReservas) {
         if (!habitacion.estaDisponibleEnRango(fechaEntrada, fechaSalida, todasLasReservas)) {
             return false;
@@ -73,7 +85,12 @@ public class Reserva {
         return true;
     }
 
-    // Quita una habitacion de la reserva.
+    /**
+     * metodo para / Quita una habitacion de la reserva.
+     * @param habitacion
+     * @return
+     */
+
     public boolean quitarHabitacion(Habitacion habitacion) {
         boolean seQuito = habitaciones.remove(habitacion);
         if (seQuito) {
@@ -82,7 +99,11 @@ public class Reserva {
         return seQuito;
     }
 
-    // Agrega un servicio adicional, solo si esta disponible en el catalogo.
+    /**
+     * metodo para agregar un servicio adicional, solo si esta disponible en el catalogo.
+     * @param servicio
+     * @return
+     */
     public boolean agregarServicio(ServicioAdicional servicio) {
         if (!servicio.isDisponible()) {
             return false;
@@ -92,8 +113,12 @@ public class Reserva {
         return true;
     }
 
-    // Quita un servicio de la reserva.
-    public boolean quitarServicio(ServicioAdicional servicio) {
+    /**
+     * metodo para // Quita un servicio de la reserva.
+     * @param servicio
+     * @return
+     */
+    public boolean quitarServicioAdicional(ServicioAdicional servicio) {
         boolean seQuito = serviciosUtilizados.remove(servicio);
         if (seQuito) {
             calcularValorTotal();
@@ -101,7 +126,10 @@ public class Reserva {
         return seQuito;
     }
 
-    // Calcula el valor total de la reserva:
+    /**
+     * metodo para calcula el valor total de la reserva:
+     * @return
+     */
     public double calcularValorTotal() {
         double subtotalHabitaciones = 0.0;
         for (int i = 0; i < habitaciones.size(); i++) {
@@ -116,49 +144,62 @@ public class Reserva {
 
         double subtotal = subtotalHabitaciones + subtotalServicios;
 
-        if (huesped.contarReservasFinalizadas() >= RESERVAS_PARA_SER_FRECUENTE) {
-            subtotal = subtotal - (subtotal * DESCUENTO_HUESPED_FRECUENTE);
+        if (huesped.contarReservasFinalizadas() >= reservasParaSerFrecuente) {
+            subtotal = subtotal - (subtotal * descuentuHuespedFrecuente);
         }
 
         this.valorTotal = subtotal;
         return valorTotal;
     }
 
-    // Confirma la reserva: solo funciona si esta Pendiente.
-    // Al confirmar, cada habitacion incluida pasa a estado Reservada.
+    /**
+     * metodo para Confirma la reserva
+     * @return
+     */
+
     public boolean confirmar() {
-        if (!estado.equals(PENDIENTE)) {
+        if (!estado.equals(pendiente)) {
             return false;
         }
-        estado = CONFIRMADA;
+        estado = confirmada;
         for (int i = 0; i < habitaciones.size(); i++) {
-            habitaciones.get(i).setEstado(Habitacion.RESERVADA);
+            habitaciones.get(i).setEstado(Habitacion.reservada);
         }
         return true;
     }
 
-    // Valida si el texto recibido es uno de los 5 estados permitidos.
+    /**
+     * metodo para Validar si el texto recibido es uno de los 5 estados permitidos.
+     * @param estado
+     * @return
+     */
+
     public static boolean esEstadoValido(String estado) {
-        if (estado.equals(PENDIENTE) || estado.equals(CONFIRMADA) || estado.equals(EN_CURSO)
-                || estado.equals(FINALIZADA) || estado.equals(CANCELADA)) {
+        if (estado.equals(pendiente) || estado.equals(confirmada) || estado.equals(enCurso)
+                || estado.equals(finalizada) || estado.equals(cancelada)) {
             return true;
         }
         return false;
     }
 
-    // Cambia el estado de la reserva y sincroniza el estado de las
-    // habitaciones asociadas:
-    // - En curso -> las habitaciones pasan a Ocupada
-    // - Finalizada/Cancelada -> las habitaciones vuelven a Disponible
+    /**
+     * Cambia el estado de la reserva y sincroniza el estado de las
+     * habitaciones asociadas:
+     * En curso -> las habitaciones pasan a Ocupada
+     * Finalizada/Cancelada -> las habitaciones vuelven a Disponible
+     * metodo para
+     * @param nuevoEstado
+     */
+
     public void cambiarEstado(String nuevoEstado) {
         this.estado = nuevoEstado;
-        if (nuevoEstado.equals(EN_CURSO)) {
+        if (nuevoEstado.equals(enCurso)) {
             for (int i = 0; i < habitaciones.size(); i++) {
-                habitaciones.get(i).setEstado(Habitacion.OCUPADA);
+                habitaciones.get(i).setEstado(Habitacion.ocupada);
             }
-        } else if (nuevoEstado.equals(FINALIZADA) || nuevoEstado.equals(CANCELADA)) {
+        } else if (nuevoEstado.equals(finalizada) || nuevoEstado.equals(cancelada)) {
             for (int i = 0; i < habitaciones.size(); i++) {
-                habitaciones.get(i).setEstado(Habitacion.DISPONIBLE);
+                habitaciones.get(i).setEstado(Habitacion.disponible);
             }
         }
     }
@@ -174,7 +215,7 @@ public class Reserva {
     public ArrayList<Habitacion> getHabitaciones() { return habitaciones; }
     public ArrayList<ServicioAdicional> getServiciosUtilizados() { return serviciosUtilizados; }
 
-    -
+
     public void setFechaEntrada(LocalDate fechaEntrada) {
         this.fechaEntrada = fechaEntrada;
         calcularValorTotal();

@@ -1,4 +1,4 @@
-public class Hotel {
+
     import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -17,6 +17,14 @@ import java.util.ArrayList;
         private ArrayList<ServicioAdicional> servicios;
         private ArrayList<Reserva> reservas;
 
+        /**
+         * metodo contructor de hotel
+         * @param nombreComercial
+         * @param nit
+         * @param direccion
+         * @param telefono
+         * @param paginaWeb
+         */
         public Hotel(String nombreComercial, String nit, String direccion, String telefono, String paginaWeb) {
             this.nombreComercial = nombreComercial;
             this.nit = nit;
@@ -38,7 +46,11 @@ import java.util.ArrayList;
             return huespedes;
         }
 
-        // Busca un huesped por documento. Si no lo encuentra, devuelve null.
+        /**
+         * metodo que busca un huesped por documento. Si no lo encuentra, devuelve null.
+         * @param documento
+         * @return
+         */
         public Huesped buscarHuespedPorDocumento(String documento) {
             for (int i = 0; i < huespedes.size(); i++) {
                 Huesped h = huespedes.get(i);
@@ -49,7 +61,11 @@ import java.util.ArrayList;
             return null;
         }
 
-        // Busca un huesped por telefono (lo usa la consulta de numero perfecto).
+        /**
+         * metodo que busca un huesped por telefono (lo usa la consulta de numero perfecto).
+         * @param telefono
+         * @return
+         */
         public Huesped buscarHuespedPorTelefono(String telefono) {
             for (int i = 0; i < huespedes.size(); i++) {
                 Huesped h = huespedes.get(i);
@@ -59,6 +75,15 @@ import java.util.ArrayList;
             }
             return null;
         }
+
+        /**
+         * metodo par actualizar para realizar actualizacion del huesped
+         * @param documento
+         * @param nuevoTelefono
+         * @param nuevoCorreo
+         * @param nuevoPais
+         * @return
+         */
 
         public boolean actualizarHuesped(String documento, String nuevoTelefono, String nuevoCorreo, String nuevoPais) {
             Huesped h = buscarHuespedPorDocumento(documento);
@@ -71,7 +96,12 @@ import java.util.ArrayList;
             return true;
         }
 
-        // Elimina un huesped (solo si no tiene reservas registradas).
+        /**
+         * Metodo que elimina un huesped (solo si no tiene reservas registradas).
+         * @param documento
+         * @return
+         */
+
         public boolean eliminarHuesped(String documento) {
             Huesped h = buscarHuespedPorDocumento(documento);
             if (h == null) {
@@ -92,6 +122,12 @@ import java.util.ArrayList;
             return habitaciones;
         }
 
+        /**
+         * metodo para buscar habitacion por numero
+         * @param numero
+         * @return
+         */
+
         public Habitacion buscarHabitacionPorNumero(int numero) {
             for (int i = 0; i < habitaciones.size(); i++) {
                 Habitacion h = habitaciones.get(i);
@@ -102,6 +138,12 @@ import java.util.ArrayList;
             return null;
         }
 
+        /**
+         * metodo para actualizar Precio Habitacion
+         * @param numero
+         * @param nuevoPrecio
+         * @return
+         */
         public boolean actualizarPrecioHabitacion(int numero, double nuevoPrecio) {
             Habitacion h = buscarHabitacionPorNumero(numero);
             if (h == null) {
@@ -111,8 +153,15 @@ import java.util.ArrayList;
             return true;
         }
 
-        // Cambia el estado de una habitacion, validando primero que el texto
-        // recibido sea uno de los 4 estados permitidos.
+        /**
+         * metodo para Cambiar el estado de una habitacion, validando primero que el texto
+         * recibido sea uno de los 4 estados permitidos.
+         * @param numero
+         * @param nuevoEstado
+         * @return
+         */
+
+        //
         public boolean actualizarEstadoHabitacion(int numero, String nuevoEstado) {
             if (!Habitacion.esEstadoValido(nuevoEstado)) {
                 return false;
@@ -125,13 +174,18 @@ import java.util.ArrayList;
             return true;
         }
 
-        // Elimina una habitacion (solo si esta Disponible).
+        /**
+         * Elimina una habitacion (solo si esta Disponible)
+         * metodo para
+         * @param numero
+         * @return
+         */
         public boolean eliminarHabitacion(int numero) {
             Habitacion h = buscarHabitacionPorNumero(numero);
             if (h == null) {
                 return false;
             }
-            if (!h.getEstado().equals(Habitacion.DISPONIBLE)) {
+            if (!h.getEstado().equals(Habitacion.disponible)) {
                 return false;
             }
             habitaciones.remove(h);
@@ -147,6 +201,12 @@ import java.util.ArrayList;
             return servicios;
         }
 
+        /**
+         * metodo para buscar Servicio Por Codigo
+         * @param codigo
+         * @return
+         */
+
         public ServicioAdicional buscarServicioPorCodigo(String codigo) {
             for (int i = 0; i < servicios.size(); i++) {
                 ServicioAdicional s = servicios.get(i);
@@ -157,6 +217,12 @@ import java.util.ArrayList;
             return null;
         }
 
+        /**
+         * metodo para ctualizar Precio Servicio
+         * @param codigo
+         * @param nuevoPrecio
+         * @return
+         */
         public boolean actualizarPrecioServicio(String codigo, double nuevoPrecio) {
             ServicioAdicional s = buscarServicioPorCodigo(codigo);
             if (s == null) {
@@ -165,6 +231,13 @@ import java.util.ArrayList;
             s.setPrecio(nuevoPrecio);
             return true;
         }
+
+        /**
+         * metodo para eliminar Servicio
+         * metodo para
+         * @param codigo
+         * @return
+         */
 
         public boolean eliminarServicio(String codigo) {
             ServicioAdicional s = buscarServicioPorCodigo(codigo);
@@ -187,6 +260,12 @@ import java.util.ArrayList;
             return reservas;
         }
 
+        /**
+         *metodo para  buscar Reserva PorCodigo
+         * metodo para
+         * @param codigo
+         * @return
+         */
         public Reserva buscarReservaPorCodigo(String codigo) {
             for (int i = 0; i < reservas.size(); i++) {
                 Reserva r = reservas.get(i);
@@ -197,6 +276,12 @@ import java.util.ArrayList;
             return null;
         }
 
+        /**
+         * metodo para actualizar EstadoReserva
+         * @param codigo
+         * @param nuevoEstado
+         * @return
+         */
         // Cambia el estado de una reserva, validando primero que sea uno de los
         // 5 estados permitidos.
         public boolean actualizarEstadoReserva(String codigo, String nuevoEstado) {
@@ -211,13 +296,18 @@ import java.util.ArrayList;
             return true;
         }
 
-        // Elimina una reserva (solo si esta Pendiente o Cancelada).
+        /**
+         * metodo para elimina una reserva (solo si esta Pendiente o Cancelada)
+         * @param codigo
+         * @return
+         */
+
         public boolean eliminarReserva(String codigo) {
             Reserva r = buscarReservaPorCodigo(codigo);
             if (r == null) {
                 return false;
             }
-            if (!r.getEstado().equals(Reserva.PENDIENTE) && !r.getEstado().equals(Reserva.CANCELADA)) {
+            if (!r.getEstado().equals(Reserva.pendiente) && !r.getEstado().equals(Reserva.cancelada)) {
                 return false;
             }
             reservas.remove(r);
@@ -225,8 +315,12 @@ import java.util.ArrayList;
             return true;
         }
 
+        /**
+         * metodo para identificar si un Numero es Perfecto
+         * @param numero
+         * @return
+         */
 
-        // Determina si un numero es "perfecto": la suma de sus divisores propios
         public boolean esNumeroPerfecto(long numero) {
             if (numero <= 1) {
                 return false;
@@ -240,7 +334,11 @@ import java.util.ArrayList;
             return sumaDivisores == numero;
         }
 
-        // valida si ese numero es perfecto.
+        /**
+         * metodo para validar si ese numero es perfecto.
+         * @param telefono
+         * @return
+         */
         public boolean telefonoEsPerfecto(String telefono) {
             String soloDigitos = telefono.replaceAll("[^0-9]", "");
             if (soloDigitos.equals("")) {
@@ -254,8 +352,11 @@ import java.util.ArrayList;
             }
         }
 
-        // Suma el valor total de todas las reservas cuya fecha de realizacion
-        // sea igual a la fecha consultada.
+        /**
+         * metodo para calcular  Ingresos Por Fecha
+         * @param fecha
+         * @return
+         */
         public double calcularIngresosPorFecha(LocalDate fecha) {
             double totalAcumulado = 0.0;
             for (int i = 0; i < reservas.size(); i++) {
@@ -273,4 +374,4 @@ import java.util.ArrayList;
         public String getTelefono() { return telefono; }
         public String getPaginaWeb() { return paginaWeb; }
     }
-}
+
